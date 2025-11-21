@@ -154,4 +154,5 @@ The hosts and ports from the URL are used only for connection initialization, du
   +  [DataGrip 2022.3.3](https://blog.jetbrains.com/datagrip/2023/01/12/datagrip-2022-3-3/): Connect to Redis with SSL/TLS enabled
 * [DataGrip 2023.2](https://www.jetbrains.com/datagrip/whatsnew/2023-2/): Redis Cluster support
   +  [DataGrip 2023.2 EAP 2](https://blog.jetbrains.com/datagrip/2023/07/06/datagrip-2023-2-eap-2-redis-cluster-new-schema-migration-dialog-and-more/): Redis Cluster support (in details)
+* [DataGrip 2024.1](https://www.jetbrains.com/datagrip/whatsnew/2024-1/): Redis Stack modules support
 
