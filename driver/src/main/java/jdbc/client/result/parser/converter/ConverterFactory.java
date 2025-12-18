@@ -13,8 +13,8 @@ import redis.clients.jedis.search.Document;
 import redis.clients.jedis.search.SearchResult;
 import redis.clients.jedis.search.aggr.AggregationResult;
 import redis.clients.jedis.timeseries.TSElement;
-import redis.clients.jedis.timeseries.TSKeyValue;
-import redis.clients.jedis.timeseries.TSKeyedElements;
+import redis.clients.jedis.timeseries.TSMGetElement;
+import redis.clients.jedis.timeseries.TSMRangeElements;
 import redis.clients.jedis.util.KeyValue;
 
 import java.util.List;
@@ -91,9 +91,9 @@ public class ConverterFactory {
 
     /* ------------------------------------------------- Native ------------------------------------------------- */
 
-    public static final ObjectConverter<KeyedListElement> KEYED_STRING = new ObjectConverter<>() {
+    public static final ObjectConverter<KeyValue<String, String>> KEYED_STRING = new ObjectConverter<>() {
         @Override
-        public ObjectType<KeyedListElement> getObjectType() {
+        public ObjectType<KeyValue<String, String>> getObjectType() {
             return TypeFactory.KEYED_STRING;
         }
     };
@@ -105,9 +105,9 @@ public class ConverterFactory {
         }
     };
 
-    public static final ObjectConverter<KeyedZSetElement> KEYED_TUPLE = new ObjectConverter<>() {
+    public static final ObjectConverter<KeyValue<String, Tuple>> KEYED_TUPLE = new ObjectConverter<>() {
         @Override
-        public ObjectType<KeyedZSetElement> getObjectType() {
+        public ObjectType<KeyValue<String, Tuple>> getObjectType() {
             return TypeFactory.KEYED_TUPLE;
         }
     };
@@ -453,16 +453,16 @@ public class ConverterFactory {
         }
     };
 
-    public static final ObjectConverter<TSKeyValue<TSElement>> TIMESERIES_MGET_RESPONSE = new ObjectConverter<>() {
+    public static final ObjectConverter<TSMGetElement> TIMESERIES_MGET_RESPONSE = new ObjectConverter<>() {
         @Override
-        public ObjectType<TSKeyValue<TSElement>> getObjectType() {
+        public ObjectType<TSMGetElement> getObjectType() {
             return TypeFactory.TIMESERIES_MGET_RESPONSE;
         }
     };
 
-    public static final ObjectConverter<TSKeyedElements> TIMESERIES_MRANGE_RESPONSE = new ObjectConverter<>() {
+    public static final ObjectConverter<TSMRangeElements> TIMESERIES_MRANGE_RESPONSE = new ObjectConverter<>() {
         @Override
-        public ObjectType<TSKeyedElements> getObjectType() {
+        public ObjectType<TSMRangeElements> getObjectType() {
             return TypeFactory.TIMESERIES_MRANGE_RESPONSE;
         }
     };

@@ -470,7 +470,6 @@ public class ResultParsers {
         CRP_MAP.put(RedisCommands.TDIGEST_TRIMMED_MEAN,       DOUBLE);
 
         CRP_MAP.put(RedisCommands.TOPK_ADD,                   STRING);
-        CRP_MAP.put(RedisCommands.TOPK_COUNT,                 LONG);
         CRP_MAP.put(RedisCommands.TOPK_INCRBY,                STRING);
         CRP_MAP.put(RedisCommands.TOPK_INFO,                  OBJECT_MAP);
         CRP_MAP.put(RedisCommands.TOPK_LIST,                  STRING);

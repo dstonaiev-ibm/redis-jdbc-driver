@@ -458,7 +458,6 @@ public class RedisCommands {
     public static final RedisCommand TDIGEST_TRIMMED_MEAN       = create(TDigestCommand.TRIMMED_MEAN);
 
     public static final RedisCommand TOPK_ADD                   = create(TopKCommand.ADD);
-    public static final RedisCommand TOPK_COUNT                 = create(TopKCommand.COUNT);
     public static final RedisCommand TOPK_INCRBY                = create(TopKCommand.INCRBY);
     public static final RedisCommand TOPK_INFO                  = create(TopKCommand.INFO);
     public static final RedisCommand TOPK_LIST                  = create(TopKCommand.LIST);
