@@ -95,12 +95,12 @@ public class EncoderFactory {
     public static final ListEncoder<byte[]> BYTE_ARRAY = new ElementListEncoder<>() {
         @Override
         protected @NotNull Builder<byte[]> getBuilder(@NotNull Params params) {
-            return BuilderFactory.BYTE_ARRAY;
+            return BuilderFactory.BINARY;
         }
 
         @Override
         protected @NotNull Builder<List<byte[]>> getListBuilder(@NotNull Params params) {
-            return BuilderFactory.BYTE_ARRAY_LIST;
+            return BuilderFactory.BINARY_LIST;
         }
     };
 
@@ -154,10 +154,10 @@ public class EncoderFactory {
 
     /* ------------------------------------------------- Native ------------------------------------------------- */
 
-    public static final ListEncoder<KeyedListElement> KEYED_STRING = new ElementListEncoder<>() {
+    public static final ListEncoder<KeyValue<String, String>> KEYED_STRING = new ElementListEncoder<>() {
         @Override
-        protected @NotNull Builder<KeyedListElement> getBuilder(@NotNull Params params) {
-            return BuilderFactory.KEYED_LIST_ELEMENT;
+        protected @NotNull Builder<KeyValue<String, String>> getBuilder(@NotNull Params params) {
+            return BuilderFactory.KEYED_ELEMENT;
         }
     };
 
@@ -168,10 +168,10 @@ public class EncoderFactory {
         }
     };
 
-    public static final ListEncoder<KeyedZSetElement> KEYED_TUPLE = new ElementListEncoder<>() {
+    public static final ListEncoder<KeyValue<String, Tuple>> KEYED_TUPLE = new ElementListEncoder<>() {
         @Override
-        protected @NotNull Builder<KeyedZSetElement> getBuilder(@NotNull Params params) {
-            return BuilderFactory.KEYED_ZSET_ELEMENT;
+        protected @NotNull Builder<KeyValue<String, Tuple>> getBuilder(@NotNull Params params) {
+            return BuilderFactory.KEYED_TUPLE;
         }
     };
 
@@ -460,14 +460,14 @@ public class EncoderFactory {
         public Map.Entry<T, Map<String, Object>> build(Object data) {
             List<?> list = (List<?>) data;
             return KeyValue.of(replyBuilder.build(list.get(0)),
-                    SearchBuilderFactory.SEARCH_PROFILE_PROFILE.build(list.get(1)));
+                    BuilderFactory.ENCODED_OBJECT_MAP.build(list.get(1)));
         }
     }
 
     private static @NotNull Builder<AggregationResult> getAggregationResultBuilder(@NotNull Params params) {
         boolean withCursor = params.contains(SearchKeyword.WITHCURSOR);
-        if (withCursor) return SearchBuilderFactory.SEARCH_AGGREGATION_RESULT_WITH_CURSOR;
-        return SearchBuilderFactory.SEARCH_AGGREGATION_RESULT;
+        if (withCursor) return AggregationResult.SEARCH_AGGREGATION_RESULT_WITH_CURSOR;
+        return AggregationResult.SEARCH_AGGREGATION_RESULT;
     }
 
     public static final ListEncoder<AggregationResult> AGGREGATION_RESULT = new ElementListEncoder<>() {
@@ -487,8 +487,7 @@ public class EncoderFactory {
     private static @NotNull Builder<SearchResult> getSearchResultBuilder(@NotNull Params params) {
         boolean hasContent = !params.contains(SearchKeyword.NOCONTENT);
         boolean hasScores = params.contains(SearchKeyword.WITHSCORES);
-        boolean hasPayloads = params.contains(SearchKeyword.WITHPAYLOADS);
-        return new SearchResultBuilder(hasContent, hasScores, hasPayloads, true);
+        return new SearchResultBuilder(hasContent, hasScores, true);
     }
 
     public static final ListEncoder<SearchResult> SEARCH_RESULT = new ElementListEncoder<>() {
@@ -554,17 +553,29 @@ public class EncoderFactory {
         }
     };
 
-    public static final ListEncoder<TSKeyValue<TSElement>> TIMESERIES_MGET_RESPONSE = new SimpleListEncoder<>() {
+    public static final ListEncoder<TSMGetElement> TIMESERIES_MGET_RESPONSE = new SimpleListEncoder<>() {
         @Override
-        protected @NotNull Builder<List<TSKeyValue<TSElement>>> getListBuilder() {
-            return TimeSeriesBuilderFactory.TIMESERIES_MGET_RESPONSE;
+        protected @NotNull Builder<List<TSMGetElement>> getListBuilder() {
+            return new Builder<>() {
+                @Override
+                public List<TSMGetElement> build(Object data) {
+                    Map<String, TSMGetElement> map = TimeSeriesBuilderFactory.TIMESERIES_MGET_RESPONSE.build(data);
+                    return map != null ? List.copyOf(map.values()) : Collections.emptyList();
+                }
+            };
         }
     };
 
-    public static final ListEncoder<TSKeyedElements> TIMESERIES_MRANGE_RESPONSE = new SimpleListEncoder<>() {
+    public static final ListEncoder<TSMRangeElements> TIMESERIES_MRANGE_RESPONSE = new SimpleListEncoder<>() {
         @Override
-        protected @NotNull Builder<List<TSKeyedElements>> getListBuilder() {
-            return TimeSeriesBuilderFactory.TIMESERIES_MRANGE_RESPONSE;
+        protected @NotNull Builder<List<TSMRangeElements>> getListBuilder() {
+            return new Builder<>() {
+                @Override
+                public List<TSMRangeElements> build(Object data) {
+                    Map<String, TSMRangeElements> map = TimeSeriesBuilderFactory.TIMESERIES_MRANGE_RESPONSE.build(data);
+                    return map != null ? List.copyOf(map.values()) : Collections.emptyList();
+                }
+            };
         }
     };
 
