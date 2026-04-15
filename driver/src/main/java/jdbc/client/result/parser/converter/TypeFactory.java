@@ -15,8 +15,8 @@ import redis.clients.jedis.search.SearchProtocol.SearchKeyword;
 import redis.clients.jedis.search.SearchResult;
 import redis.clients.jedis.search.aggr.AggregationResult;
 import redis.clients.jedis.timeseries.TSElement;
-import redis.clients.jedis.timeseries.TSKeyValue;
-import redis.clients.jedis.timeseries.TSKeyedElements;
+import redis.clients.jedis.timeseries.TSMGetElement;
+import redis.clients.jedis.timeseries.TSMRangeElements;
 import redis.clients.jedis.timeseries.TimeSeriesProtocol.TimeSeriesKeyword;
 import redis.clients.jedis.util.KeyValue;
 
@@ -68,9 +68,9 @@ public class TypeFactory {
 
     /* ------------------------------------------------- Native ------------------------------------------------- */
 
-    public static final ObjectType<KeyedListElement> KEYED_STRING = new ObjectType<>() {{
-        add("key", STRING, AbstractMap.SimpleImmutableEntry::getKey);
-        add("value", STRING, KeyedListElement::getElement);
+    public static final ObjectType<KeyValue<String, String>> KEYED_STRING = new ObjectType<>() {{
+        add("key", STRING, KeyValue::getKey);
+        add("value", STRING, KeyValue::getValue);
     }};
 
     public static final ObjectType<Tuple> TUPLE = new ObjectType<>() {{
@@ -78,10 +78,10 @@ public class TypeFactory {
         add("score", DOUBLE, Tuple::getScore);
     }};
 
-    public static final ObjectType<KeyedZSetElement> KEYED_TUPLE = new ObjectType<>() {{
-        add("key", STRING, KeyedZSetElement::getKey);
-        add("value", STRING, Tuple::getElement);
-        add("score", DOUBLE, Tuple::getScore);
+    public static final ObjectType<KeyValue<String, Tuple>> KEYED_TUPLE = new ObjectType<>() {{
+        add("key", STRING, KeyValue::getKey);
+        add("value", STRING, kzt -> kzt.getValue().getElement());
+        add("score", DOUBLE, kzt -> kzt.getValue().getScore());
     }};
 
 
@@ -235,9 +235,9 @@ public class TypeFactory {
 
     public static final ObjectType<AccessControlUser> ACCESS_CONTROL_USER = new ObjectType<>() {{
         add("flags", LIST, AccessControlUser::getFlags);
-        add("keys", LIST, AccessControlUser::getKeys);
+        add("keys", STRING, AccessControlUser::getKeys);
         add("passwords", LIST, AccessControlUser::getPassword);
-        add("channels", LIST, AccessControlUser::getChannels);
+        add("channels", STRING, AccessControlUser::getChannels);
         add("commands", STRING, AccessControlUser::getCommands);
     }};
 
@@ -247,7 +247,7 @@ public class TypeFactory {
         add("context", STRING, AccessControlLogEntry::getContext);
         add("object", STRING, AccessControlLogEntry::getObject);
         add("username", STRING, AccessControlLogEntry::getUsername);
-        add("age-seconds", STRING, AccessControlLogEntry::getAgeSeconds);
+        add("age-seconds", DOUBLE, AccessControlLogEntry::getAgeSeconds);
         add("client-info", MAP, AccessControlLogEntry::getClientInfo);
         add("entry-id", LONG, AccessControlLogEntry::getEntryId);
         add("timestamp-created", LONG, AccessControlLogEntry::getTimestampCreated);
@@ -270,7 +270,7 @@ public class TypeFactory {
         add("step", LONG, CommandInfo::getStep);
         add("acl-categories", LIST, CommandInfo::getAclCategories);
         add("tips", LIST, CommandInfo::getTips);
-        add("subcommands", LIST, CommandInfo::getSubcommands);
+        add("subcommands", MAP, CommandInfo::getSubcommands);
     }};
 
     public static final ObjectType<FunctionStats> FUNCTION_STATS = new ObjectType<>() {{
@@ -373,15 +373,15 @@ public class TypeFactory {
         add("value", DOUBLE, TSElement::getValue);
     }};
 
-    public static final ObjectType<TSKeyValue<TSElement>> TIMESERIES_MGET_RESPONSE = new ObjectType<>() {{
-        add("key", STRING, TSKeyValue::getKey);
-        add("labels", MAP, TSKeyValue::getLabels, Utils.contains(TimeSeriesKeyword.WITHLABELS, TimeSeriesKeyword.SELECTED_LABELS));
-        add("element", MAP, TSKeyValue::getValue, ConverterFactory.TIMESERIES_ELEMENT::convert);
+    public static final ObjectType<TSMGetElement> TIMESERIES_MGET_RESPONSE = new ObjectType<>() {{
+        add("key", STRING, TSMGetElement::getKey);
+        add("labels", MAP, TSMGetElement::getLabels, Utils.contains(TimeSeriesKeyword.WITHLABELS, TimeSeriesKeyword.SELECTED_LABELS));
+        add("element", MAP, TSMGetElement::getElement, ConverterFactory.TIMESERIES_ELEMENT::convert);
     }};
 
-    public static final ObjectType<TSKeyedElements> TIMESERIES_MRANGE_RESPONSE = new ObjectType<>() {{
-        add("key", STRING, TSKeyedElements::getKey);
-        add("elements", LIST, TSKeyedElements::getValue, ConverterFactory.TIMESERIES_ELEMENT::convertList);
+    public static final ObjectType<TSMRangeElements> TIMESERIES_MRANGE_RESPONSE = new ObjectType<>() {{
+        add("key", STRING, TSMRangeElements::getKey);
+        add("elements", LIST, TSMRangeElements::getElements, ConverterFactory.TIMESERIES_ELEMENT::convertList);
     }};
 
 

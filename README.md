@@ -122,12 +122,11 @@ System properties are used as fallback if connection properties are not provided
 -Djavax.net.ssl.keyStore=/path/to/client.keystore
 -Djavax.net.ssl.keyStorePassword=password123
 ```
-
-To disable server certificate verification set the property `verifyServerCertificate=false`.
+To disable server certificate verification set the property `verifyServerCertificate` to `false`.
 
 ### Port Forwarding
 
-Set the property `hostAndPortMapping` to `{<toHost1>:<toPort1>=<fromHost1>:<fromHost1>, …}`.
+Set the property `hostAndPortMapping` to `{<toHost1>:<toPort1>=<fromHost1>:<fromPort1>, …}`.
 
 Example:
 ```
@@ -135,7 +134,7 @@ Example:
 ```
 
 For using port forwarding with **Redis Standalone**, providing `hostAndPortMapping` **is not mandatory**.<br> 
- it is sufficient to specify `toHost` and `toPort` in the URL.
+ it is sufficient to specify `fromHost` and `fromPort` in the URL.
 
 For using port forwarding with **Redis Cluster**, providing `hostAndPortMapping` **is mandatory**.<br> 
 The hosts and ports from the URL are used only for connection initialization, during which the hosts and ports of the cluster's nodes are obtained from the server. When sending commands, these obtained hosts and ports are transformed by applying `hostAndPortMapping` and then used.
@@ -172,4 +171,5 @@ The hosts and ports from the URL are used only for connection initialization, du
   +  [DataGrip 2022.3.3](https://blog.jetbrains.com/datagrip/2023/01/12/datagrip-2022-3-3/): Connect to Redis with SSL/TLS enabled
 * [DataGrip 2023.2](https://www.jetbrains.com/datagrip/whatsnew/2023-2/): Redis Cluster support
   +  [DataGrip 2023.2 EAP 2](https://blog.jetbrains.com/datagrip/2023/07/06/datagrip-2023-2-eap-2-redis-cluster-new-schema-migration-dialog-and-more/): Redis Cluster support (in details)
+* [DataGrip 2024.1](https://www.jetbrains.com/datagrip/whatsnew/2024-1/): Redis Stack modules support
 

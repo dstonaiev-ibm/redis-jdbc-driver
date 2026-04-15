@@ -19,8 +19,8 @@ import redis.clients.jedis.resps.*;
 import redis.clients.jedis.search.SearchResult;
 import redis.clients.jedis.search.aggr.AggregationResult;
 import redis.clients.jedis.timeseries.TSElement;
-import redis.clients.jedis.timeseries.TSKeyValue;
-import redis.clients.jedis.timeseries.TSKeyedElements;
+import redis.clients.jedis.timeseries.TSMGetElement;
+import redis.clients.jedis.timeseries.TSMRangeElements;
 import redis.clients.jedis.util.KeyValue;
 
 import java.util.List;
@@ -188,14 +188,14 @@ public class ResultParserFactory {
 
     /* ------------------------------------------------- Native ------------------------------------------------- */
 
-    public static final ResultParser KEYED_STRING = new ObjectListResultParser<KeyedListElement>() {
+    public static final ResultParser KEYED_STRING = new ObjectListResultParser<KeyValue<String, String>>() {
         @Override
-        protected @NotNull ListEncoder<KeyedListElement> getEncoder() {
+        protected @NotNull ListEncoder<KeyValue<String, String>> getEncoder() {
             return EncoderFactory.KEYED_STRING;
         }
 
         @Override
-        protected @NotNull ObjectConverter<KeyedListElement> getConverter() {
+        protected @NotNull ObjectConverter<KeyValue<String, String>> getConverter() {
             return ConverterFactory.KEYED_STRING;
         }
     };
@@ -212,14 +212,14 @@ public class ResultParserFactory {
         }
     };
 
-    public static final ResultParser KEYED_TUPLE = new ObjectListResultParser<KeyedZSetElement>() {
+    public static final ResultParser KEYED_TUPLE = new ObjectListResultParser<KeyValue<String, Tuple>>() {
         @Override
-        protected @NotNull ListEncoder<KeyedZSetElement> getEncoder() {
+        protected @NotNull ListEncoder<KeyValue<String, Tuple>> getEncoder() {
             return EncoderFactory.KEYED_TUPLE;
         }
 
         @Override
-        protected @NotNull ObjectConverter<KeyedZSetElement> getConverter() {
+        protected @NotNull ObjectConverter<KeyValue<String, Tuple>> getConverter() {
             return ConverterFactory.KEYED_TUPLE;
         }
     };
@@ -710,26 +710,26 @@ public class ResultParserFactory {
         }
     };
 
-    public static final ResultParser TIMESERIES_MGET_RESPONSE = new ObjectListResultParser<TSKeyValue<TSElement>>() {
+    public static final ResultParser TIMESERIES_MGET_RESPONSE = new ObjectListResultParser<TSMGetElement>() {
         @Override
-        protected @NotNull ListEncoder<TSKeyValue<TSElement>> getEncoder() {
+        protected @NotNull ListEncoder<TSMGetElement> getEncoder() {
             return EncoderFactory.TIMESERIES_MGET_RESPONSE;
         }
 
         @Override
-        protected @NotNull ObjectConverter<TSKeyValue<TSElement>> getConverter() {
+        protected @NotNull ObjectConverter<TSMGetElement> getConverter() {
             return ConverterFactory.TIMESERIES_MGET_RESPONSE;
         }
     };
 
-    public static final ResultParser TIMESERIES_MRANGE_RESPONSE = new ObjectListResultParser<TSKeyedElements>() {
+    public static final ResultParser TIMESERIES_MRANGE_RESPONSE = new ObjectListResultParser<TSMRangeElements>() {
         @Override
-        protected @NotNull ListEncoder<TSKeyedElements> getEncoder() {
+        protected @NotNull ListEncoder<TSMRangeElements> getEncoder() {
             return EncoderFactory.TIMESERIES_MRANGE_RESPONSE;
         }
 
         @Override
-        protected @NotNull ObjectConverter<TSKeyedElements> getConverter() {
+        protected @NotNull ObjectConverter<TSMRangeElements> getConverter() {
             return ConverterFactory.TIMESERIES_MRANGE_RESPONSE;
         }
     };
