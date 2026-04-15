@@ -106,7 +106,7 @@ public class SSLUtils {
           tsIS.close();
         }
         catch (IOException e) {
-          // can't close input stream, but trueststore can be properly initialized so we shouldn't throw this exception
+          // can't close input stream, but truststore can be properly initialized so we shouldn't throw this exception
         }
       }
     }

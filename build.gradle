@@ -23,6 +23,9 @@ sourceSets {
         java {
             srcDirs = ['driver/src/test']
         }
+        resources {
+            srcDirs = ['driver/src/test/resources']
+        }
     }
 }
 
